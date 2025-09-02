@@ -13,7 +13,21 @@ export default class HelpDesk {
   init() {
     //отрисовываем список существующих тикетов на странице.
     this.ticketService.list(this.queryList);
+    //добавляем кнопку создания тикетов.
+    this.createBtn();
     console.info("init");
+  }
+
+  createBtn() {
+    const myBtn = document.createElement("button");
+    myBtn.classList.add("btn-create");
+    myBtn.classList.add("btn-primary");
+    myBtn.style.position = "absolute";
+    myBtn.style.top = "20px";
+    myBtn.style.right = "50px";
+    myBtn.style.padding = "5px";
+    myBtn.textContent = "Create Ticket";
+    document.body.appendChild(myBtn);
   }
 
   queryList(responseData) {

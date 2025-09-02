@@ -5,7 +5,7 @@ body {
 .ticket-container {
     width: 100%;
     margin: 0 auto;
-    margin-top: 5%;
+    margin-top: 70px;
     text-align: center;
 }
 
@@ -15,9 +15,7 @@ body {
     justify-items: center;
     align-items: center;
     padding: 1%;
-    /* margin: 1%;  */
     border: 1px solid lightgray;
-    /* border-bottom: none; */
 }
 span {
     flex-grow: 1;
