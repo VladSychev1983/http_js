@@ -1,3 +1,34 @@
 body {
     color: #999;
 }
+
+.ticket-container {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 5%;
+    text-align: center;
+}
+
+.ticket-item {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    padding: 1%;
+    /* margin: 1%;  */
+    border: 1px solid lightgray;
+    /* border-bottom: none; */
+}
+span {
+    flex-grow: 1;
+    width: 100%;
+}
+/* махинация с бордер чтоб не было двойных. */
+
+div:first-child {
+    border-bottom: none;
+}
+
+div:last-child {
+    border-top: none;
+}
