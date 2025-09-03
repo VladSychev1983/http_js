@@ -108,7 +108,7 @@ export default class HelpDesk {
         <div class='ticket-item' id="${id}">
         ${status_element}
         <span style="flex-grow:2;">${text}}</span>
-        <span>${convertDate(created)}</span>
+        <span style="max-width: 200px;">${convertDate(created)}</span>
         <span style="flex-grow:0;"><a class="btn-edit bi bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
         <span style="flex-grow:0;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
         </div>
