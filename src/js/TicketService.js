@@ -52,5 +52,24 @@ export default class TicketService {
 
   update(id, data, callback) {}
 
-  delete(id, callback) {}
+  delete(id, callback) {
+        const xhr = new XMLHttpRequest();
+    const url = "http://localhost:7070";
+    const path = `method=deleteById&id=${id}`;
+    const fullUrl = `${url}?${path}`;
+    xhr.open("GET", fullUrl, true);
+    xhr.onload = function () {
+      if (xhr.status == 204) {
+        const status = xhr.status;
+        callback(status);
+      } else {
+        console.error("Error:", xhr.statusText);
+      }
+    };
+    xhr.onerror = function () {
+      console.error("Network error occurred.");
+    };
+    xhr.send();
+
+  }
 }

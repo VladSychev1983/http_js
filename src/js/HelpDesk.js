@@ -8,6 +8,8 @@ export default class HelpDesk {
     }
     this.container = container;
     this.ticketService = ticketService;
+    window.deleteFunc = this.ticketService.delete;
+    window.callbackDeleteFunc = this.callbackDeleteTicket;
   }
 
   init() {
@@ -20,12 +22,15 @@ export default class HelpDesk {
 
     //создаем новый тикет.
     const createBtn = document.getElementById('createNewTicketBtn');
-    createBtn.addEventListener ('click', () => {
+    createBtn.addEventListener('click', () => {
       const dataJson = this.getCreateData();
       //console.log(dataJson);
       this.ticketService.create(dataJson, this.callbackCreateTicket);
     });
+    createBtn.removeEventListener('click', () => { })
 
+    //удаляем тикет.
+    this.deleteTicket();
     console.info("init");
   }
 
@@ -44,7 +49,9 @@ export default class HelpDesk {
       const modalDiv = document.getElementById("myModalCreate");
       modalDiv.style.display = "block";
     });
+    myBtn.removeEventListener("click", function () {});
   }
+
   modalCreate() {
     const modalDiv = document.createElement("div");
     modalDiv.id = "myModalCreate";
@@ -132,7 +139,7 @@ export default class HelpDesk {
         ${status_element}
         <span style="flex-grow:2;">${text}</span>
         <span style="max-width: 200px;">${convertDate(created)}</span>
-        <span style="flex-grow:0;"><a class="btn-edit bi bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
+        <span style="flex-grow:0;"><a class="btn-edit bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
         <span style="flex-grow:0;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
         </div>
             `;
@@ -163,6 +170,7 @@ export default class HelpDesk {
     const jsonData = JSON.stringify(data);
     return jsonData;
   }
+
   callbackCreateTicket(dataResponse) {
     const createModal = document.getElementById('myModalCreate');
     if (dataResponse.id !== undefined) {
@@ -170,4 +178,29 @@ export default class HelpDesk {
       window.location.reload();
     }
   }
+
+  deleteTicket() {
+      document.addEventListener('DOMContentLoaded', function () {
+      const deleteButtons = document.getElementsByClassName('btn-delete bi-trash');
+      let myTimer = setTimeout( () => {
+      const array = Array.from(deleteButtons);
+      console.log('Найдено кнопок для удаления:', deleteButtons.length);
+      array.forEach(button => {  
+        button.addEventListener('click', (event) => {
+          const dataId = event.target.dataset.id;
+          window.deleteFunc(dataId, window.callbackDeleteFunc)
+          console.log(`Атрибут data-id равен ${dataId}`);
+        }); //listener
+      }); //foreach
+    }, 50); //timer
+    }); //contentloaded
+  } //method end
+  
+  callbackDeleteTicket(statusResponse) {
+    console.log(`callbackdelete: ${statusResponse}`);
+    if (statusResponse === 204) {
+      window.location.reload();
+    }
+  }
+
 }

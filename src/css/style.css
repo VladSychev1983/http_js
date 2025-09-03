@@ -83,8 +83,12 @@ body {
 }
 
 /* стили для кнопки редактирования и удаления */
-.btn-edit .btn-delete {
+.btn-edit {
     width: 100px;
+}
+
+.btn-delete-a-tag {
+   width: 100px; 
 }
 
 /* рисуем галочу если true */
