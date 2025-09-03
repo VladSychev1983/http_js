@@ -102,8 +102,8 @@ export default class HelpDesk {
 
     const renderList = (id, status, text, created) => {
       const status_element = (status === true) ? 
-      `<span class="checkmark" style="color: blue" title="Тикет в работе">&#10003;</span>` : 
-      `<span class="checkmark" title="Тикет выключен">X</span>`;
+      `<span class="checkmark" style="color: blue" title="Tiket enabled">&#10003;</span>` : 
+      `<span class="checkmark" title="Ticket disabled">X</span>`;
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
