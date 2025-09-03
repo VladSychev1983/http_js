@@ -15,7 +15,7 @@ export default class HelpDesk {
     this.ticketService.list(this.queryList);
     //добавляем кнопку создания тикетов.
     this.createBtn();
-    // добавляем модальное окно создания тикета.
+    //добавляем модальное окно создания тикета.
     this.modalCreate();
     console.info("init");
   }
@@ -45,7 +45,7 @@ export default class HelpDesk {
     modalContentDiv.classList.add("modal-content");
     const span = document.createElement("span");
     span.classList.add("btn-close");
-    span.id = 'btn-close-create';
+    span.id = "btn-close-create";
     span.setAttribute("aria-label", "Close");
     modalContentDiv.append(span);
     const h2 = document.createElement("h2");
@@ -71,25 +71,46 @@ export default class HelpDesk {
     var closeBtn = document.getElementById("btn-close-create");
     closeBtn.onclick = function () {
       modalDiv.style.display = "none";
-    }
+    };
   }
 
   queryList(responseData) {
-    //тут надо прочитать object resposeData (уже Array) и запихнуть в созданный объект узел.
+    //читаем resposeData (уже Array) и рендерим в созданный объект узел.
     const container = document.getElementById("root");
     const newDiv = document.createElement("div");
     newDiv.classList.add("ticket-container");
     container.append(newDiv);
     const ticketContainer = container.querySelector(".ticket-container");
     let content = "";
+
+    //конвертируем дату.
+    const convertDate = (unixtime) => {
+      unixtime = Math.trunc(unixtime / 1000);
+      const dateObject = new Date(unixtime * 1000);
+      const year = dateObject.getFullYear();
+      const month = dateObject.getMonth() + 1;
+      const day = dateObject.getDate();
+      const hours = dateObject.getHours();
+      const minutes = dateObject.getMinutes();
+      const seconds = dateObject.getSeconds();
+      const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      const formattedDate = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+      // console.log(formattedDate, formattedTime);
+      // console.log(dateObject.getFullYear());
+      return `${day}.${month}.${year} ${hours}:${minutes}`;
+    };
+
     const renderList = (id, status, text, created) => {
+      const status_element = (status === true) ? 
+      `<span class="checkmark" style="color: blue" title="Тикет в работе">&#10003;</span>` : 
+      `<span class="checkmark" title="Тикет выключен">X</span>`;
       return `
         <div class='ticket-item' id="${id}">
-        <span>${status}</span>
-        <span>${text}}</span></td>
-        <span>${created}</span></td>
-        <span><a class="btn-edit" href="#" data-id="${id}">edit</a></span>
-        <span><a class="btn-delete" href="#" data-id="${id}">delete</a></span>
+        ${status_element}
+        <span style="flex-grow:2;">${text}}</span>
+        <span>${convertDate(created)}</span>
+        <span style="flex-grow:0;"><a class="btn-edit bi bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
+        <span style="flex-grow:0;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
         </div>
             `;
     };

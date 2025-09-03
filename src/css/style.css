@@ -4,7 +4,7 @@ body {
 
 .ticket-container {
     width: 95%;
-    margin: 0 auto;
+    margin: 0px auto;
     margin-top: 70px;
     text-align: center;
 }
@@ -17,9 +17,9 @@ body {
     padding: 1%;
     border: 1px solid lightgray;
 }
-span {
+.ticket-item span {
     flex-grow: 1;
-    width: 100%;
+    /* width: 100%; */
 }
 /* махинация с бордер чтоб не было двойных. */
 
@@ -70,4 +70,18 @@ span {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* стили для кнопки редактирования и удаления */
+.btn-edit .btn-delete {
+    width: 100px;
+}
+
+/* рисуем галочу если true */
+.checkmark {
+    max-width: 30px;
+    border-radius: 50%;
+    border-color: lightgray;
+    border: 1px solid lightgray;
+    text-align: center;
 }
