@@ -15,6 +15,8 @@ export default class HelpDesk {
     this.ticketService.list(this.queryList);
     //добавляем кнопку создания тикетов.
     this.createBtn();
+    // добавляем модальное окно создания тикета.
+    this.modalCreate();
     console.info("init");
   }
 
@@ -28,6 +30,48 @@ export default class HelpDesk {
     myBtn.style.padding = "5px";
     myBtn.textContent = "Create Ticket";
     document.body.appendChild(myBtn);
+    // откываем модальное окно по кнопке.
+    myBtn.addEventListener("click", function () {
+      const modalDiv = document.getElementById("myModalCreate");
+      modalDiv.style.display = "block";
+    });
+  }
+  modalCreate() {
+    const modalDiv = document.createElement("div");
+    modalDiv.id = "myModalCreate";
+    modalDiv.classList.add("modal");
+    document.body.append(modalDiv);
+    const modalContentDiv = document.createElement("div");
+    modalContentDiv.classList.add("modal-content");
+    const span = document.createElement("span");
+    span.classList.add("btn-close");
+    span.id = 'btn-close-create';
+    span.setAttribute("aria-label", "Close");
+    modalContentDiv.append(span);
+    const h2 = document.createElement("h2");
+    h2.textContent = "Create new ticket";
+    modalContentDiv.append(h2);
+    const p = document.createElement("p");
+    p.textContent = "this is body of the modal window";
+    modalContentDiv.append(p);
+    const buttonCreate = document.createElement("button");
+    buttonCreate.id = "createNewTicketBtn";
+    buttonCreate.textContent = "Add New Ticket";
+    buttonCreate.classList.add("btn-primary");
+    modalContentDiv.append(buttonCreate);
+    modalDiv.append(modalContentDiv);
+
+    //закрываем модальное окно при клике вне окна.
+    window.onclick = function (event) {
+      if (event.target == modalDiv) {
+        modalDiv.style.display = "none";
+      }
+    };
+    //закрываем модальное окно по кнопке.
+    var closeBtn = document.getElementById("btn-close-create");
+    closeBtn.onclick = function () {
+      modalDiv.style.display = "none";
+    }
   }
 
   queryList(responseData) {
