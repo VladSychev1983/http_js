@@ -75,6 +75,13 @@ body {
     cursor: pointer;
 }
 
+#btn-short-create, #btn-full-create {
+    margin: 5px;
+}
+#createNewTicketBtn {
+    margin-top: 20px;
+}
+
 /* стили для кнопки редактирования и удаления */
 .btn-edit .btn-delete {
     width: 100px;

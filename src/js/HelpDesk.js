@@ -17,6 +17,15 @@ export default class HelpDesk {
     this.createBtn();
     //добавляем модальное окно создания тикета.
     this.modalCreate();
+
+    //создаем новый тикет.
+    const createBtn = document.getElementById('createNewTicketBtn');
+    createBtn.addEventListener ('click', () => {
+      const dataJson = this.getCreateData();
+      //console.log(dataJson);
+      this.ticketService.create(dataJson, this.callbackCreateTicket);
+    });
+
     console.info("init");
   }
 
@@ -49,14 +58,28 @@ export default class HelpDesk {
     span.setAttribute("aria-label", "Close");
     modalContentDiv.append(span);
     const h2 = document.createElement("h2");
-    h2.textContent = "Create new ticket";
+    h2.textContent = "Добавить тикет";
     modalContentDiv.append(h2);
+    
     const p = document.createElement("p");
-    p.textContent = "this is body of the modal window";
+    p.textContent = "Краткое описание";
     modalContentDiv.append(p);
+
+    const inputShort = document.createElement("textarea");
+    inputShort.id = 'btn-short-create';
+    modalContentDiv.append(inputShort);
+
+    const p2 = document.createElement("p");
+    p2.textContent = "Подробное описание";
+    modalContentDiv.append(p2);
+
+    const inputFull = document.createElement("textarea");
+    inputFull.id = 'btn-full-create';
+    modalContentDiv.append(inputFull);
+
     const buttonCreate = document.createElement("button");
     buttonCreate.id = "createNewTicketBtn";
-    buttonCreate.textContent = "Add New Ticket";
+    buttonCreate.textContent = "Создать";
     buttonCreate.classList.add("btn-primary");
     modalContentDiv.append(buttonCreate);
     modalDiv.append(modalContentDiv);
@@ -103,11 +126,11 @@ export default class HelpDesk {
     const renderList = (id, status, text, created) => {
       const status_element = (status === true) ? 
       `<span class="checkmark" style="color: blue" title="Тикет в работе">&#10003;</span>` : 
-      `<span class="checkmark" title="Тикет выключен">X</span>`;
+      `<span class="checkmark" title="Тикет выполнен">X</span>`;
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
-        <span style="flex-grow:2;">${text}}</span>
+        <span style="flex-grow:2;">${text}</span>
         <span style="max-width: 200px;">${convertDate(created)}</span>
         <span style="flex-grow:0;"><a class="btn-edit bi bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
         <span style="flex-grow:0;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
@@ -126,5 +149,25 @@ export default class HelpDesk {
     ticketContainer.innerHTML = content;
     //console.log(content);
     //console.log(responseData);
+  }
+
+  getCreateData() {
+    let data = {};
+    const eshortText = document.getElementById('btn-short-create');
+    const efullText = document.getElementById('btn-full-create');
+    const shortText = eshortText.value;
+    const fullText = efullText.value;
+    data.name = shortText;
+    data.description = fullText;
+    data.id = null;
+    const jsonData = JSON.stringify(data);
+    return jsonData;
+  }
+  callbackCreateTicket(dataResponse) {
+    const createModal = document.getElementById('myModalCreate');
+    if (dataResponse.id !== undefined) {
+      createModal.style.display = "";
+      window.location.reload();
+    }
   }
 }

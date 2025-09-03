@@ -25,7 +25,30 @@ export default class TicketService {
   }
   get(id, callback) {}
 
-  create(data, callback) {}
+  create(data, callback) {
+    //тут надо отправить запрос на создание нового тикета.
+    const xhr = new XMLHttpRequest();
+    const url = "http://localhost:7070";
+    const path = "method=createTicket";
+    const fullUrl = `${url}?${path}`;
+    xhr.open("POST", fullUrl, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    // Обработка успешного завершения запроса
+    xhr.onload = function () {
+        if (xhr.status === 200 || xhr.status < 300) {
+            console.log('Запрос успешно отправлен:', xhr.responseText);
+            const data_obj = JSON.parse(xhr.responseText);
+            callback(data_obj);
+        } else {
+            console.error('Ошибка:', xhr.status, xhr.statusText);
+        }
+    xhr.onerror = function () {
+      console.error("Network error occurred.");
+    };
+      };
+      console.log(data)
+    xhr.send(data);
+  }
 
   update(id, data, callback) {}
 
