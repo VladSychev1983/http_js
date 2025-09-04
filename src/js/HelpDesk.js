@@ -19,12 +19,13 @@ export default class HelpDesk {
     this.createBtn();
     //добавляем модальное окно создания тикета.
     this.modalCreate();
+    //добавляем модально окно подтверждения удаления.
+    this.modalConfirm();
 
     //создаем новый тикет.
     const createBtn = document.getElementById('createNewTicketBtn');
     createBtn.addEventListener('click', () => {
       const dataJson = this.getCreateData();
-      //console.log(dataJson);
       this.ticketService.create(dataJson, this.callbackCreateTicket);
     });
     createBtn.removeEventListener('click', () => { })
@@ -104,6 +105,40 @@ export default class HelpDesk {
     };
   }
 
+  modalConfirm() {
+    const modalDiv = document.createElement("div");
+    modalDiv.id = "myModalConfirm";
+    modalDiv.classList.add("modal");
+    document.body.append(modalDiv);
+    const modalContentDiv = document.createElement("div");
+    modalContentDiv.classList.add("modal-content");
+    const span = document.createElement("span");
+    span.classList.add("btn-close");
+    span.id = "btn-close-confirm";
+    span.setAttribute("aria-label", "Close");
+    modalContentDiv.append(span);
+    const h2 = document.createElement("h2");
+    h2.textContent = "Удалить тикет";
+    modalContentDiv.append(h2);
+    const p = document.createElement("p");
+    p.textContent = "Вы уверены, что хотите удалить тикет? Это действие необратимо.";
+    modalContentDiv.append(p);
+    const divButtons = document.createElement('div');
+    divButtons.classList.add('modal-buttons');
+    modalContentDiv.append(divButtons);
+    const buttonOk = document.createElement('button');
+    buttonOk.id = 'button-confirm-ok';
+    buttonOk.textContent = "OK";
+    buttonOk.classList.add('btn-primary');
+    divButtons.append(buttonOk);
+    const buttonDiscard = document.createElement('button');
+    buttonDiscard.id = 'button-confirm-discard';
+    buttonDiscard.textContent = "Отмена";
+    buttonDiscard.classList.add('btn-primary');
+    divButtons.append(buttonDiscard);
+    modalDiv.append(modalContentDiv);
+  }
+
   queryList(responseData) {
     //читаем resposeData (уже Array) и рендерим в созданный объект узел.
     const container = document.getElementById("root");
@@ -125,8 +160,6 @@ export default class HelpDesk {
       const seconds = dateObject.getSeconds();
       const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
       const formattedDate = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-      // console.log(formattedDate, formattedTime);
-      // console.log(dateObject.getFullYear());
       return `${day}.${month}.${year} ${hours}:${minutes}`;
     };
 
@@ -181,18 +214,36 @@ export default class HelpDesk {
 
   deleteTicket() {
       document.addEventListener('DOMContentLoaded', function () {
+      const modalConfirmDiv = document.getElementById('myModalConfirm');
       const deleteButtons = document.getElementsByClassName('btn-delete bi-trash');
+            //подписываемся на события по кнопкам подтверждения удаления.
+      const buttonOk = document.getElementById('button-confirm-ok');
+      const buttonDiscard = document.getElementById('button-confirm-discard');
+      const buttonCloseConfirm = document.getElementById('btn-close-confirm');
+      
+      buttonDiscard.onclick = () => {
+        modalConfirmDiv.style.display = "none";
+      }
+      buttonCloseConfirm.onclick = () => {
+        modalConfirmDiv.style.display = "none";
+      }
+
       let myTimer = setTimeout( () => {
       const array = Array.from(deleteButtons);
       console.log('Найдено кнопок для удаления:', deleteButtons.length);
       array.forEach(button => {  
         button.addEventListener('click', (event) => {
           const dataId = event.target.dataset.id;
-          window.deleteFunc(dataId, window.callbackDeleteFunc)
+          modalConfirmDiv.style.display = "block";
+          buttonOk.onclick = () => {
+            window.deleteFunc(dataId, window.callbackDeleteFunc);
+            console.log(`clicked ok! ${dataId}`)
+              }
           console.log(`Атрибут data-id равен ${dataId}`);
         }); //listener
       }); //foreach
-    }, 50); //timer
+    }, 100); //timer
+
     }); //contentloaded
   } //method end
   

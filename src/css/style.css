@@ -83,19 +83,32 @@ body {
 }
 
 /* стили для кнопки редактирования и удаления */
-.btn-edit {
+.btn-edit .btn-delete {
     width: 100px;
-}
-
-.btn-delete-a-tag {
-   width: 100px; 
 }
 
 /* рисуем галочу если true */
 .checkmark {
     max-width: 30px;
     border-radius: 50%;
-    border-color: lightgray;
+    border-color:lightgrey;
     border: 1px solid lightgray;
     text-align: center;
 }
+
+/* стили модального окна подтвержения */
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Расстояние между кнопками */
+}
+        
+.modal-confirm-ok, .modal-confirm-discard {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+        }
