@@ -50,7 +50,10 @@ export default class TicketService {
     xhr.send(data);
   }
 
-  update(id, data, callback) {}
+  update(id, data, callback) {
+    console.log(`TicketService update method: ${id}`);
+    callback();
+  }
 
   delete(id, callback) {
     const xhr = new XMLHttpRequest();

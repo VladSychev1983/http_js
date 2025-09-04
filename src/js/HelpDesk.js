@@ -32,6 +32,8 @@ export default class HelpDesk {
 
     //удаляем тикет.
     this.deleteTicket();
+    //кликаем по чемарку.
+    this.checkmarkClick(this.ticketService.update, this.checkmarkCallback);
     console.info("init");
   }
 
@@ -255,5 +257,32 @@ export default class HelpDesk {
     if (statusResponse === 204) {
       window.location.reload();
     }
+  }
+
+  checkmarkClick(sendQueryFunc, callbackFunc) {
+    const data = {};
+    const checkmarkBtns = document.getElementsByClassName(
+        "checkmark",
+      );
+      let myTimer = setTimeout(() => {
+      const checkmarkArray = Array.from(checkmarkBtns);
+      console.log(checkmarkBtns);
+      console.log(checkmarkArray);
+      checkmarkArray.forEach((button) => {
+        //console.dir(button);
+        button.addEventListener('click', (e) => {
+          const dataId = e.target.dataset.id;
+          data.id = dataId;
+          console.log(`Атрибут data-id равен ${dataId}`);
+          // вызываем фукцию обновления Id здесь, передаем dataId
+          sendQueryFunc(dataId, data, callbackFunc);
+        }); //click event
+      }) //foreach
+
+      }, 100); //myTimer
+  }
+  checkmarkCallback(dataResponse) {
+    console.log('checkmarkCallback called!');
+    console.log(dataResponse);
   }
 }
