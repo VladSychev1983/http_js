@@ -3,10 +3,12 @@ body {
 }
 
 .ticket-container {
+    display: table;
     width: 95%;
     margin: 0px auto;
     margin-top: 70px;
     text-align: left;
+    border-collapse: collapse;   
 }
 
 .ticket-item {
@@ -17,10 +19,13 @@ body {
     align-items: center;
     padding: 1%;
     border: 1px solid lightgray;
+    display: table-row;
 }
 .ticket-item span {
+    display: table-cell;
     border: 0px solid black;
     flex-grow: 1;
+    padding: 7px;
     padding-left: 10px;
     /* width: 100%; */
 }
@@ -94,6 +99,7 @@ body {
     border-color:lightgrey;
     border: 1px solid lightgray;
     text-align: center;
+    cursor: pointer;
 }
 
 /* стили модального окна подтвержения */

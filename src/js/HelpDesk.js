@@ -167,15 +167,15 @@ export default class HelpDesk {
     const renderList = (id, status, text, created) => {
       const status_element =
         status === true
-          ? `<span class="checkmark" style="color: blue" title="Тикет в работе">&#10003;</span>`
-          : `<span class="checkmark" title="Тикет выполнен">X</span>`;
+          ? `<span class="checkmark" data-id="${id}" style="color: blue" title="Тикет выполнет">&#10003;</span>`
+          : `<span class="checkmark" data-id="${id}" title="Тикет в работе">&times;</span>`;
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
         <span style="flex-grow:2;">${text}</span>
-        <span style="max-width: 200px;">${convertDate(created)}</span>
-        <span style="flex-grow:0;"><a class="btn-edit bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
-        <span style="flex-grow:0;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
+        <span style="max-width: 100px;">${convertDate(created)}</span>
+        <span style="flex-grow:0; width: 30px;"><a class="btn-edit bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
+        <span style="flex-grow:0; width: 30px;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
         </div>
             `;
     };
