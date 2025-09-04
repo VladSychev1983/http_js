@@ -23,12 +23,12 @@ export default class HelpDesk {
     this.modalConfirm();
 
     //создаем новый тикет.
-    const createBtn = document.getElementById('createNewTicketBtn');
-    createBtn.addEventListener('click', () => {
+    const createBtn = document.getElementById("createNewTicketBtn");
+    createBtn.addEventListener("click", () => {
       const dataJson = this.getCreateData();
       this.ticketService.create(dataJson, this.callbackCreateTicket);
     });
-    createBtn.removeEventListener('click', () => { })
+    createBtn.removeEventListener("click", () => {});
 
     //удаляем тикет.
     this.deleteTicket();
@@ -68,13 +68,13 @@ export default class HelpDesk {
     const h2 = document.createElement("h2");
     h2.textContent = "Добавить тикет";
     modalContentDiv.append(h2);
-    
+
     const p = document.createElement("p");
     p.textContent = "Краткое описание";
     modalContentDiv.append(p);
 
     const inputShort = document.createElement("textarea");
-    inputShort.id = 'btn-short-create';
+    inputShort.id = "btn-short-create";
     modalContentDiv.append(inputShort);
 
     const p2 = document.createElement("p");
@@ -82,7 +82,7 @@ export default class HelpDesk {
     modalContentDiv.append(p2);
 
     const inputFull = document.createElement("textarea");
-    inputFull.id = 'btn-full-create';
+    inputFull.id = "btn-full-create";
     modalContentDiv.append(inputFull);
 
     const buttonCreate = document.createElement("button");
@@ -121,20 +121,21 @@ export default class HelpDesk {
     h2.textContent = "Удалить тикет";
     modalContentDiv.append(h2);
     const p = document.createElement("p");
-    p.textContent = "Вы уверены, что хотите удалить тикет? Это действие необратимо.";
+    p.textContent =
+      "Вы уверены, что хотите удалить тикет? Это действие необратимо.";
     modalContentDiv.append(p);
-    const divButtons = document.createElement('div');
-    divButtons.classList.add('modal-buttons');
+    const divButtons = document.createElement("div");
+    divButtons.classList.add("modal-buttons");
     modalContentDiv.append(divButtons);
-    const buttonOk = document.createElement('button');
-    buttonOk.id = 'button-confirm-ok';
+    const buttonOk = document.createElement("button");
+    buttonOk.id = "button-confirm-ok";
     buttonOk.textContent = "OK";
-    buttonOk.classList.add('btn-primary');
+    buttonOk.classList.add("btn-primary");
     divButtons.append(buttonOk);
-    const buttonDiscard = document.createElement('button');
-    buttonDiscard.id = 'button-confirm-discard';
+    const buttonDiscard = document.createElement("button");
+    buttonDiscard.id = "button-confirm-discard";
     buttonDiscard.textContent = "Отмена";
-    buttonDiscard.classList.add('btn-primary');
+    buttonDiscard.classList.add("btn-primary");
     divButtons.append(buttonDiscard);
     modalDiv.append(modalContentDiv);
   }
@@ -164,9 +165,10 @@ export default class HelpDesk {
     };
 
     const renderList = (id, status, text, created) => {
-      const status_element = (status === true) ? 
-      `<span class="checkmark" style="color: blue" title="Тикет в работе">&#10003;</span>` : 
-      `<span class="checkmark" title="Тикет выполнен">X</span>`;
+      const status_element =
+        status === true
+          ? `<span class="checkmark" style="color: blue" title="Тикет в работе">&#10003;</span>`
+          : `<span class="checkmark" title="Тикет выполнен">X</span>`;
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
@@ -193,8 +195,8 @@ export default class HelpDesk {
 
   getCreateData() {
     let data = {};
-    const eshortText = document.getElementById('btn-short-create');
-    const efullText = document.getElementById('btn-full-create');
+    const eshortText = document.getElementById("btn-short-create");
+    const efullText = document.getElementById("btn-full-create");
     const shortText = eshortText.value;
     const fullText = efullText.value;
     data.name = shortText;
@@ -205,7 +207,7 @@ export default class HelpDesk {
   }
 
   callbackCreateTicket(dataResponse) {
-    const createModal = document.getElementById('myModalCreate');
+    const createModal = document.getElementById("myModalCreate");
     if (dataResponse.id !== undefined) {
       createModal.style.display = "";
       window.location.reload();
@@ -213,45 +215,45 @@ export default class HelpDesk {
   }
 
   deleteTicket() {
-      document.addEventListener('DOMContentLoaded', function () {
-      const modalConfirmDiv = document.getElementById('myModalConfirm');
-      const deleteButtons = document.getElementsByClassName('btn-delete bi-trash');
-            //подписываемся на события по кнопкам подтверждения удаления.
-      const buttonOk = document.getElementById('button-confirm-ok');
-      const buttonDiscard = document.getElementById('button-confirm-discard');
-      const buttonCloseConfirm = document.getElementById('btn-close-confirm');
-      
+    document.addEventListener("DOMContentLoaded", function () {
+      const modalConfirmDiv = document.getElementById("myModalConfirm");
+      const deleteButtons = document.getElementsByClassName(
+        "btn-delete bi-trash",
+      );
+      //подписываемся на события по кнопкам подтверждения удаления.
+      const buttonOk = document.getElementById("button-confirm-ok");
+      const buttonDiscard = document.getElementById("button-confirm-discard");
+      const buttonCloseConfirm = document.getElementById("btn-close-confirm");
+
       buttonDiscard.onclick = () => {
         modalConfirmDiv.style.display = "none";
-      }
+      };
       buttonCloseConfirm.onclick = () => {
         modalConfirmDiv.style.display = "none";
-      }
+      };
 
-      let myTimer = setTimeout( () => {
-      const array = Array.from(deleteButtons);
-      console.log('Найдено кнопок для удаления:', deleteButtons.length);
-      array.forEach(button => {  
-        button.addEventListener('click', (event) => {
-          const dataId = event.target.dataset.id;
-          modalConfirmDiv.style.display = "block";
-          buttonOk.onclick = () => {
-            window.deleteFunc(dataId, window.callbackDeleteFunc);
-            console.log(`clicked ok! ${dataId}`)
-              }
-          console.log(`Атрибут data-id равен ${dataId}`);
-        }); //listener
-      }); //foreach
-    }, 100); //timer
-
+      let myTimer = setTimeout(() => {
+        const array = Array.from(deleteButtons);
+        console.log("Найдено кнопок для удаления:", deleteButtons.length);
+        array.forEach((button) => {
+          button.addEventListener("click", (event) => {
+            const dataId = event.target.dataset.id;
+            modalConfirmDiv.style.display = "block";
+            buttonOk.onclick = () => {
+              window.deleteFunc(dataId, window.callbackDeleteFunc);
+              console.log(`clicked ok! ${dataId}`);
+            };
+            console.log(`Атрибут data-id равен ${dataId}`);
+          }); //listener
+        }); //foreach
+      }, 100); //timer
     }); //contentloaded
   } //method end
-  
+
   callbackDeleteTicket(statusResponse) {
     console.log(`callbackdelete: ${statusResponse}`);
     if (statusResponse === 204) {
       window.location.reload();
     }
   }
-
 }
