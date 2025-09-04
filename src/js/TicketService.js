@@ -65,10 +65,8 @@ export default class TicketService {
     .then(response => response.json())
     .then(result => callback(result))
     .catch(error => console.error("Ошибка", error));
-
     //console.log(`TicketService update method: ${id}`);
     //console.log(data)
-    callback(); //send response here.
   }
 
   delete(id, callback) {

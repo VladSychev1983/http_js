@@ -19,9 +19,10 @@ export default class HelpDesk {
     this.createBtn();
     //добавляем модальное окно создания тикета.
     this.modalCreate();
-    //добавляем модально окно подтверждения удаления.
+    //добавляем модальное окно подтверждения удаления.
     this.modalConfirm();
-
+    //добавляем модальное окно редактирования.
+    this.modalEdit();
     //создаем новый тикет.
     const createBtn = document.getElementById("createNewTicketBtn");
     createBtn.addEventListener("click", () => {
@@ -34,6 +35,9 @@ export default class HelpDesk {
     this.deleteTicket();
     //кликаем по чемарку.
     this.checkmarkClick(this.ticketService.update, this.checkmarkCallback);
+
+    //редактируем тикет.
+    this.editTicket();
     console.info("init");
   }
 
@@ -95,13 +99,63 @@ export default class HelpDesk {
     modalDiv.append(modalContentDiv);
 
     //закрываем модальное окно при клике вне окна.
-    window.onclick = function (event) {
-      if (event.target == modalDiv) {
-        modalDiv.style.display = "none";
-      }
-    };
+    modalDiv.addEventListener('click', (event) => {
+                if (event.target === modalDiv) {
+                    console.log('Клик вне модального окна, удаление отменено.');
+                    modalDiv.style.display = "none";
+                }
+            });
+
     //закрываем модальное окно по кнопке.
     var closeBtn = document.getElementById("btn-close-create");
+    closeBtn.onclick = function () {
+      modalDiv.style.display = "none";
+    };
+
+  }
+  modalEdit() {
+    const modalDiv = document.createElement("div");
+    modalDiv.id = "myModalEdit";
+    modalDiv.classList.add("modal");
+    document.body.append(modalDiv);
+    const modalContentDiv = document.createElement("div");
+    modalContentDiv.classList.add("modal-content");
+    const span = document.createElement("span");
+    span.classList.add("btn-close");
+    span.id = "btn-close-edit";
+    span.setAttribute("aria-label", "Close");
+    modalContentDiv.append(span);
+    const h2 = document.createElement("h2");
+    h2.textContent = "Изменить тикет";
+    modalContentDiv.append(h2);
+    const p = document.createElement("p");
+    p.textContent = "Краткое описание";
+    modalContentDiv.append(p);
+    const inputShort = document.createElement("textarea");
+    inputShort.id = "btn-short-edit";
+    modalContentDiv.append(inputShort);
+    const p2 = document.createElement("p");
+    p2.textContent = "Подробное описание";
+    modalContentDiv.append(p2);
+    const inputFull = document.createElement("textarea");
+    inputFull.id = "btn-full-edit";
+    modalContentDiv.append(inputFull);
+    const buttonEdit = document.createElement("button");
+    buttonEdit.id = "editTicketBtn";
+    buttonEdit.textContent = "Редактировать";
+    buttonEdit.classList.add("btn-primary");
+    modalContentDiv.append(buttonEdit);
+    modalDiv.append(modalContentDiv);
+    //закрываем модальное окно вне области.
+    modalDiv.addEventListener('click', (event) => {
+      if (event.target === modalDiv) {
+        console.log('Клик вне модального окна, удаление отменено.');
+        modalDiv.style.display = "none";
+        }
+            });
+
+    //закрываем модальное окно по кнопке.
+    var closeBtn = document.getElementById("btn-close-edit");
     closeBtn.onclick = function () {
       modalDiv.style.display = "none";
     };
@@ -266,8 +320,6 @@ export default class HelpDesk {
       );
       let myTimer = setTimeout(() => {
       const checkmarkArray = Array.from(checkmarkBtns);
-      console.log(checkmarkBtns);
-      console.log(checkmarkArray);
       checkmarkArray.forEach((button) => {
         //console.dir(button);
         button.addEventListener('click', (e) => {
@@ -285,6 +337,24 @@ export default class HelpDesk {
   }
   checkmarkCallback(dataResponse) {
     console.log('checkmarkCallback called!');
-    window.location.reload();
+    if(dataResponse.id !== "") {
+      window.location.reload();
+    }
+  }
+  editTicket() {
+    const editModal = document.getElementById("myModalEdit");
+    const buttonClose = document.getElementById('btn-close-edit');
+    const buttonEdit = document.getElementById("editTicketBtn");
+    const buttonsPencil = document.getElementsByClassName('btn-edit bi-pencil');
+    setTimeout(() => {
+      const buttonsEditArray = Array.from(buttonsPencil);
+      buttonsEditArray.forEach(button => {
+        button.addEventListener('click', (event) => {
+          const dataId = event.target.dataset.id;
+          editModal.style.display = "block";
+          console.log(`Атрибут data-id равен ${dataId}`);
+        }); //listener
+      });
+    }, 100);
   }
 }

@@ -118,3 +118,6 @@ body {
     font-size: 1em;
     transition: background-color 0.2s ease;
         }
+#editTicketBtn {
+    margin-top: 20px;
+}
