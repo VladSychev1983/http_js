@@ -169,8 +169,8 @@ export default class HelpDesk {
     const renderList = (id, status, text, created) => {
       const status_element =
         status === true
-          ? `<span class="checkmark" data-id="${id}" style="color: blue" title="Тикет выполнет">&#10003;</span>`
-          : `<span class="checkmark" data-id="${id}" title="Тикет в работе">&times;</span>`;
+          ? `<span class="checkmark" data-id="${id}" data-status="${status}" style="color: blue" title="Тикет выполнет">&#10003;</span>`
+          : `<span class="checkmark" data-id="${id}" data-status="${status}" title="Тикет в работе">&times;</span>`;
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
@@ -272,7 +272,9 @@ export default class HelpDesk {
         //console.dir(button);
         button.addEventListener('click', (e) => {
           const dataId = e.target.dataset.id;
+          const status = e.target.dataset.status;
           data.id = dataId;
+          data.status = (status === 'false') ? true : false; 
           console.log(`Атрибут data-id равен ${dataId}`);
           // вызываем фукцию обновления Id здесь, передаем dataId
           sendQueryFunc(dataId, data, callbackFunc);
@@ -283,6 +285,6 @@ export default class HelpDesk {
   }
   checkmarkCallback(dataResponse) {
     console.log('checkmarkCallback called!');
-    console.log(dataResponse);
+    window.location.reload();
   }
 }

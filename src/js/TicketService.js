@@ -51,8 +51,24 @@ export default class TicketService {
   }
 
   update(id, data, callback) {
-    console.log(`TicketService update method: ${id}`);
-    callback();
+    const url = "http://localhost:7070";
+    const path = "method=updateById&id="
+    const encodeID = encodeURIComponent(id);
+    const fullUrl = `${url}?${path}${encodeID}`;
+    fetch(fullUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => callback(result))
+    .catch(error => console.error("Ошибка", error));
+
+    //console.log(`TicketService update method: ${id}`);
+    //console.log(data)
+    callback(); //send response here.
   }
 
   delete(id, callback) {
