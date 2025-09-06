@@ -2,4 +2,4 @@
 
 # Helpdesk
 
-![Ссылка на проект](https://vladsychev1983.github.io/http_js/)
+[Ссылка на виджет ](https://vladsychev1983.github.io/http_js/)
