@@ -2,6 +2,20 @@ body {
     color: #999;
 }
 
+/* стили скрытия описания. */
+.description {
+    display: none !important;
+}
+
+.disabled {
+    display: none !important;
+}
+
+.enabled {
+    display: block !important;
+}
+/* ============== */
+
 .ticket-container {
     display: table;
     width: 95%;

@@ -25,7 +25,8 @@ export default class HelpDesk {
     this.modalEdit();
     //создаем новый тикет.
     const createBtn = document.getElementById("createNewTicketBtn");
-    createBtn.addEventListener("click", () => {
+    createBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
       const dataJson = this.getCreateData();
       this.ticketService.create(dataJson, this.callbackCreateTicket);
     });
@@ -37,7 +38,10 @@ export default class HelpDesk {
     this.checkmarkClick(this.ticketService.update, this.checkmarkCallback);
 
     //редактируем тикет.
-    this.editTicket(this.ticketService.update,this.editCallback);
+    this.editTicket(this.ticketService.update, this.editCallback);
+
+    //показываем описание тикета.
+    this.hideShowDescription();
     console.info("init");
   }
 
@@ -52,7 +56,8 @@ export default class HelpDesk {
     myBtn.textContent = "Create Ticket";
     document.body.appendChild(myBtn);
     // откываем модальное окно по кнопке.
-    myBtn.addEventListener("click", function () {
+    myBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
       const modalDiv = document.getElementById("myModalCreate");
       modalDiv.style.display = "block";
     });
@@ -100,6 +105,7 @@ export default class HelpDesk {
 
     //закрываем модальное окно при клике вне окна.
     modalDiv.addEventListener("click", (event) => {
+      event.stopPropagation();
       if (event.target === modalDiv) {
         console.log("Клик вне модального окна, удаление отменено.");
         modalDiv.style.display = "none";
@@ -145,12 +151,23 @@ export default class HelpDesk {
     buttonEdit.classList.add("btn-primary");
     modalContentDiv.append(buttonEdit);
     modalDiv.append(modalContentDiv);
+
     //закрываем модальное окно вне области.
     modalDiv.addEventListener("click", (event) => {
+      event.stopPropagation();
       if (event.target === modalDiv) {
         console.log("Клик вне модального окна, удаление отменено.");
         modalDiv.style.display = "none";
       }
+      //отменяем всплытие при клике по тексту.
+      const textDescription = document.querySelectorAll("[data-description]");
+      const arrayTextDescription = Array.from(textDescription);
+      arrayTextDescription.forEach((span) => {
+        span.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+      });
+      modalDiv.removeEventListener("click", () => {});
     });
 
     //закрываем модальное окно по кнопке.
@@ -227,7 +244,7 @@ export default class HelpDesk {
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
-        <span style="flex-grow:2;">${text}<span style="display:none;" data-description="${id}">${description}</span></span>
+        <span class="shortTextId" style="flex-grow:2;" data-id="${id}">${text} <span class="description" data-description="${id}">${description}</span></span>
         <span style="max-width: 100px;">${convertDate(created)}</span>
         <span style="flex-grow:0; width: 30px;"><a class="btn-edit bi-pencil" href="#" data-id="${id}" data-name="${text}" data-fullname="${description}" title="Edit ticket"></a></span>&nbsp&nbsp
         <span style="flex-grow:0; width: 30px;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
@@ -355,30 +372,69 @@ export default class HelpDesk {
           console.log(`Атрибут data-name равен ${text}`);
           console.log(`Атрибут data-fullname равен ${description}`);
           //заполняем поля формы редактирования.
-          const shortField = document.getElementById('btn-short-edit');
-          const fullField = document.getElementById('btn-full-edit');
+          const shortField = document.getElementById("btn-short-edit");
+          const fullField = document.getElementById("btn-full-edit");
           shortField.value = text;
           fullField.value = description;
         }); //listener
       });
       //вешаем обработчик на кнопку редактировать.
-      buttonEdit.addEventListener('click', () => {
-        const newShortField = document.getElementById('btn-short-edit');
-        const newFullField = document.getElementById('btn-full-edit');
+      buttonEdit.addEventListener("click", () => {
+        const newShortField = document.getElementById("btn-short-edit");
+        const newFullField = document.getElementById("btn-full-edit");
         const newText = newShortField.value;
         const newDescription = newFullField.value;
         dataUpdate.name = newText;
         dataUpdate.description = newDescription;
         console.log(newText, newDescription);
-        console.log(`В dataUpdate: ${dataUpdate.id} ${dataUpdate.name} ${dataUpdate.description}`);
+        console.log(
+          `В dataUpdate: ${dataUpdate.id} ${dataUpdate.name} ${dataUpdate.description}`,
+        );
         //вызываем функцию обновления тикета.
         updateFunc(dataUpdate.id, dataUpdate, callbackFunc);
-      }) //listener buttonEdit
+      }); //listener buttonEdit
     }, 100);
   }
   editCallback(responseData) {
     if (responseData) {
       window.location.reload();
     }
+  }
+  hideShowDescription() {
+    const allSpansText = document.getElementsByClassName("shortTextId");
+    console.dir(allSpansText);
+    let arraySpans;
+    setTimeout(() => {
+      arraySpans = Array.from(allSpansText);
+      console.log(arraySpans);
+      arraySpans.forEach((span) => {
+        span.addEventListener("click", (event) => {
+          const dataId = event.target.dataset.id;
+          console.log(`Clicked span id:${dataId}`);
+          setTimeout(() => {
+            const textDescription = document.querySelector(
+              `[data-description="${dataId}"]`,
+            );
+            //отменям клик на дочернем span description
+            textDescription.addEventListener("click", (event) => {
+              event.stopPropagation();
+            }); //listener textDescription
+            textDescription.removeEventListener("click", () => {});
+            //console.log(textDescription);
+            //по клику проверям наличие display.
+            if (dataId !== undefined) {
+              if (textDescription.classList.contains("disabled")) {
+                textDescription.classList.remove("disabled");
+                textDescription.classList.add("enabled");
+              } else {
+                textDescription.classList.remove("enabled");
+                textDescription.classList.add("disabled");
+              }
+            } //if dataId
+          }, 1);
+          event.stopPropagation();
+        }); //listener
+      }); //foreach span elements
+    }, 50); //timeout
   }
 }
