@@ -1,4 +1,8 @@
-import demo from "./app";
+//import demo from "./app";
+
+function demo(value) {
+  return `Demo: ${value}`;
+}
 
 describe("Пример теста", () => {
   test.each([
