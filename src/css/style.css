@@ -3,10 +3,12 @@ body {
 }
 
 .ticket-container {
+    display: table;
     width: 95%;
     margin: 0px auto;
     margin-top: 70px;
     text-align: left;
+    border-collapse: collapse;   
 }
 
 .ticket-item {
@@ -17,10 +19,13 @@ body {
     align-items: center;
     padding: 1%;
     border: 1px solid lightgray;
+    display: table-row;
 }
 .ticket-item span {
+    display: table-cell;
     border: 0px solid black;
     flex-grow: 1;
+    padding: 7px;
     padding-left: 10px;
     /* width: 100%; */
 }
@@ -75,6 +80,13 @@ body {
     cursor: pointer;
 }
 
+#btn-short-create, #btn-full-create {
+    margin: 5px;
+}
+#createNewTicketBtn {
+    margin-top: 20px;
+}
+
 /* стили для кнопки редактирования и удаления */
 .btn-edit .btn-delete {
     width: 100px;
@@ -84,7 +96,28 @@ body {
 .checkmark {
     max-width: 30px;
     border-radius: 50%;
-    border-color: lightgray;
+    border-color:lightgrey;
     border: 1px solid lightgray;
     text-align: center;
+    cursor: pointer;
+}
+
+/* стили модального окна подтвержения */
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Расстояние между кнопками */
+}
+        
+.modal-confirm-ok, .modal-confirm-discard {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+        }
+#editTicketBtn {
+    margin-top: 20px;
 }

@@ -25,9 +25,67 @@ export default class TicketService {
   }
   get(id, callback) {}
 
-  create(data, callback) {}
+  create(data, callback) {
+    //тут надо отправить запрос на создание нового тикета.
+    const xhr = new XMLHttpRequest();
+    const url = "http://localhost:7070";
+    const path = "method=createTicket";
+    const fullUrl = `${url}?${path}`;
+    xhr.open("POST", fullUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    // Обработка успешного завершения запроса
+    xhr.onload = function () {
+      if (xhr.status === 200 || xhr.status < 300) {
+        console.log("Запрос успешно отправлен:", xhr.responseText);
+        const data_obj = JSON.parse(xhr.responseText);
+        callback(data_obj);
+      } else {
+        console.error("Ошибка:", xhr.status, xhr.statusText);
+      }
+      xhr.onerror = function () {
+        console.error("Network error occurred.");
+      };
+    };
+    console.log(data);
+    xhr.send(data);
+  }
 
-  update(id, data, callback) {}
+  update(id, data, callback) {
+    const url = "http://localhost:7070";
+    const path = "method=updateById&id="
+    const encodeID = encodeURIComponent(id);
+    const fullUrl = `${url}?${path}${encodeID}`;
+    fetch(fullUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => callback(result))
+    .catch(error => console.error("Ошибка", error));
+    //console.log(`TicketService update method: ${id}`);
+    //console.log(data)
+  }
 
-  delete(id, callback) {}
+  delete(id, callback) {
+    const xhr = new XMLHttpRequest();
+    const url = "http://localhost:7070";
+    const path = `method=deleteById&id=${id}`;
+    const fullUrl = `${url}?${path}`;
+    xhr.open("GET", fullUrl, true);
+    xhr.onload = function () {
+      if (xhr.status == 204) {
+        const status = xhr.status;
+        callback(status);
+      } else {
+        console.error("Error:", xhr.statusText);
+      }
+    };
+    xhr.onerror = function () {
+      console.error("Network error occurred.");
+    };
+    xhr.send();
+  }
 }
