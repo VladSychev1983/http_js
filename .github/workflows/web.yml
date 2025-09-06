@@ -29,3 +29,13 @@ jobs:
 
     - name: Run tests
       run: npm test # Assuming you have a 'test' script in your package.json
+    - name: Setup Pages
+      uses: peaceiris/actions-gh-pages@v4
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+          publish_dir: ./dist # Or your build output directory, e.g., './build', './public'
+          # cname: example.com # Uncomment and set if you use a custom domain
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

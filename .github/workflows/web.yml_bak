@@ -44,7 +44,7 @@ jobs:
       - run: npm run test
 
   build:
-    needs: [eslint]
+    needs: [eslint, test]
 
     environment:
       name: github-pages
