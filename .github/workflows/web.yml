@@ -34,7 +34,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-          publish_dir: ./dist # Or your build output directory, e.g., './build', './public'
+          path: 'dist' # Or your build output directory, e.g., './build', './public'
           # cname: example.com # Uncomment and set if you use a custom domain
     - name: Deploy to GitHub Pages
       id: deployment
