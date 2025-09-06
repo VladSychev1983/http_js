@@ -37,7 +37,7 @@ export default class HelpDesk {
     this.checkmarkClick(this.ticketService.update, this.checkmarkCallback);
 
     //редактируем тикет.
-    this.editTicket();
+    this.editTicket(this.ticketService.update,this.editCallback);
     console.info("init");
   }
 
@@ -99,19 +99,18 @@ export default class HelpDesk {
     modalDiv.append(modalContentDiv);
 
     //закрываем модальное окно при клике вне окна.
-    modalDiv.addEventListener('click', (event) => {
-                if (event.target === modalDiv) {
-                    console.log('Клик вне модального окна, удаление отменено.');
-                    modalDiv.style.display = "none";
-                }
-            });
+    modalDiv.addEventListener("click", (event) => {
+      if (event.target === modalDiv) {
+        console.log("Клик вне модального окна, удаление отменено.");
+        modalDiv.style.display = "none";
+      }
+    });
 
     //закрываем модальное окно по кнопке.
     var closeBtn = document.getElementById("btn-close-create");
     closeBtn.onclick = function () {
       modalDiv.style.display = "none";
     };
-
   }
   modalEdit() {
     const modalDiv = document.createElement("div");
@@ -147,12 +146,12 @@ export default class HelpDesk {
     modalContentDiv.append(buttonEdit);
     modalDiv.append(modalContentDiv);
     //закрываем модальное окно вне области.
-    modalDiv.addEventListener('click', (event) => {
+    modalDiv.addEventListener("click", (event) => {
       if (event.target === modalDiv) {
-        console.log('Клик вне модального окна, удаление отменено.');
+        console.log("Клик вне модального окна, удаление отменено.");
         modalDiv.style.display = "none";
-        }
-            });
+      }
+    });
 
     //закрываем модальное окно по кнопке.
     var closeBtn = document.getElementById("btn-close-edit");
@@ -220,17 +219,17 @@ export default class HelpDesk {
       return `${day}.${month}.${year} ${hours}:${minutes}`;
     };
 
-    const renderList = (id, status, text, created) => {
+    const renderList = (id, status, text, created, description) => {
       const status_element =
-    (status === true) 
-          ? `<span class="checkmark" data-id="${id}" data-status="${status}" style="color: blue" title="Тикет выполнет">&#10003;</span>`
+        status === true
+          ? `<span class="checkmark" data-id="${id}" data-status="${status}" style="color: blue" title="Тикет выполнен">&#10003;</span>`
           : `<span class="checkmark" data-id="${id}" data-status="${status}" title="Тикет в работе">&times;</span>`;
       return `
         <div class='ticket-item' id="${id}">
         ${status_element}
-        <span style="flex-grow:2;">${text}</span>
+        <span style="flex-grow:2;">${text}<span style="display:none;" data-description="${id}">${description}</span></span>
         <span style="max-width: 100px;">${convertDate(created)}</span>
-        <span style="flex-grow:0; width: 30px;"><a class="btn-edit bi-pencil" href="#" data-id="${id}" title="Edit ticket"></a></span>&nbsp&nbsp
+        <span style="flex-grow:0; width: 30px;"><a class="btn-edit bi-pencil" href="#" data-id="${id}" data-name="${text}" data-fullname="${description}" title="Edit ticket"></a></span>&nbsp&nbsp
         <span style="flex-grow:0; width: 30px;"><a class="btn-delete bi-trash" href="#" data-id="${id}" title="Delete ticket"></a></span>&nbsp&nbsp
         </div>
             `;
@@ -242,6 +241,7 @@ export default class HelpDesk {
         element.status,
         element.name,
         element.created,
+        element.description,
       );
     });
     ticketContainer.innerHTML = content;
@@ -315,46 +315,70 @@ export default class HelpDesk {
 
   checkmarkClick(sendQueryFunc, callbackFunc) {
     const data = {};
-    const checkmarkBtns = document.getElementsByClassName(
-        "checkmark",
-      );
-      let myTimer = setTimeout(() => {
+    const checkmarkBtns = document.getElementsByClassName("checkmark");
+    let myTimer = setTimeout(() => {
       const checkmarkArray = Array.from(checkmarkBtns);
       checkmarkArray.forEach((button) => {
-        //console.dir(button);
-        button.addEventListener('click', (e) => {
+        button.addEventListener("click", (e) => {
           const dataId = e.target.dataset.id;
           const status = e.target.dataset.status;
           data.id = dataId;
-          data.status = (status === 'false') ? true : false; 
+          data.status = status === "false" ? true : false;
           console.log(`Атрибут data-id равен ${dataId}`);
           // вызываем фукцию обновления Id здесь, передаем dataId
           sendQueryFunc(dataId, data, callbackFunc);
         }); //click event
-      }) //foreach
-
-      }, 100); //myTimer
+      }); //foreach
+    }, 100); //myTimer
   }
   checkmarkCallback(dataResponse) {
-    console.log('checkmarkCallback called!');
-    if(dataResponse.id !== "") {
+    console.log("checkmarkCallback called!");
+    if (dataResponse.id !== "") {
       window.location.reload();
     }
   }
-  editTicket() {
+  editTicket(updateFunc, callbackFunc) {
+    let dataUpdate = {};
     const editModal = document.getElementById("myModalEdit");
-    const buttonClose = document.getElementById('btn-close-edit');
     const buttonEdit = document.getElementById("editTicketBtn");
-    const buttonsPencil = document.getElementsByClassName('btn-edit bi-pencil');
+    const buttonsPencil = document.getElementsByClassName("btn-edit bi-pencil");
     setTimeout(() => {
       const buttonsEditArray = Array.from(buttonsPencil);
-      buttonsEditArray.forEach(button => {
-        button.addEventListener('click', (event) => {
+      buttonsEditArray.forEach((button) => {
+        button.addEventListener("click", (event) => {
           const dataId = event.target.dataset.id;
+          const description = event.target.dataset.fullname;
+          const text = event.target.dataset.name;
           editModal.style.display = "block";
+          dataUpdate.id = dataId;
           console.log(`Атрибут data-id равен ${dataId}`);
+          console.log(`Атрибут data-name равен ${text}`);
+          console.log(`Атрибут data-fullname равен ${description}`);
+          //заполняем поля формы редактирования.
+          const shortField = document.getElementById('btn-short-edit');
+          const fullField = document.getElementById('btn-full-edit');
+          shortField.value = text;
+          fullField.value = description;
         }); //listener
       });
+      //вешаем обработчик на кнопку редактировать.
+      buttonEdit.addEventListener('click', () => {
+        const newShortField = document.getElementById('btn-short-edit');
+        const newFullField = document.getElementById('btn-full-edit');
+        const newText = newShortField.value;
+        const newDescription = newFullField.value;
+        dataUpdate.name = newText;
+        dataUpdate.description = newDescription;
+        console.log(newText, newDescription);
+        console.log(`В dataUpdate: ${dataUpdate.id} ${dataUpdate.name} ${dataUpdate.description}`);
+        //вызываем функцию обновления тикета.
+        updateFunc(dataUpdate.id, dataUpdate, callbackFunc);
+      }) //listener buttonEdit
     }, 100);
+  }
+  editCallback(responseData) {
+    if (responseData) {
+      window.location.reload();
+    }
   }
 }
